@@ -10,6 +10,7 @@ This repository contains the code corresponding to an in-depth tutorial availabl
 
 Join our [Discord community](https://discord.com/channels/1070200085440376872/1267499814678171698) for discussions about this specific app.
 
+
 ## Tech Stack
 
 - **Next JS**
