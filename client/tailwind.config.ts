@@ -13,35 +13,25 @@ const baseColors = [
   "pink",
 ];
 
-// Safe mapping of shades
-const shadeMapping = {
-  "50": "900",
-  "100": "800",
-  "200": "700",
-  "300": "600",
-  "400": "500",
-  "500": "400",
-  "600": "300",
-  "700": "200",
-  "800": "100",
-  "900": "50",
-};
+// Tailwind default only goes 50–900
+const safeShades = ["50","100","200","300","400","500","600","700","800","900"];
 
-// Safe function (prevents undefined Amplify build errors)
-const generateThemeObject = (colors: any, mapping: any, invert = false) => {
+const generateThemeObject = (colors: any, invert = false) => {
   const theme: any = {};
+
   baseColors.forEach((color) => {
     theme[color] = {};
-    Object.entries(mapping).forEach(([key, value]: any) => {
-      const shadeKey = invert ? value : key;
-      theme[color][key] = colors[color]?.[shadeKey] ?? "#000000"; // Safe fallback
+    safeShades.forEach((shade, i) => {
+      const mappedShade = invert ? safeShades[safeShades.length - 1 - i] : shade;
+      theme[color][shade] = colors[color]?.[mappedShade] ?? "#000000";
     });
   });
+
   return theme;
 };
 
-const lightTheme = generateThemeObject(colors, shadeMapping);
-const darkTheme = generateThemeObject(colors, shadeMapping, true);
+const lightTheme = generateThemeObject(colors, false);
+const darkTheme = generateThemeObject(colors, true);
 
 const themes = {
   light: {
@@ -50,8 +40,9 @@ const themes = {
   },
   dark: {
     ...darkTheme,
-    white: colors.gray["950"],
-    black: colors.gray["50"],
+    // FIXED: removed gray["950"] and gray["50"]
+    white: "#111111",
+    black: "#f5f5f5",
   },
 };
 
@@ -72,9 +63,7 @@ const config: Config = {
     },
   },
   plugins: [
-    createThemes({
-      ...themes,
-    }),
+    createThemes(themes),
   ],
 };
 
