@@ -63,7 +63,7 @@ const config: Config = {
     },
   },
   plugins: [
-    createThemes(themes),
+    // createThemes(themes),
   ],
 };
 
