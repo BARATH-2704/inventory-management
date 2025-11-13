@@ -13,6 +13,7 @@ const baseColors = [
   "pink",
 ];
 
+// Safe mapping of shades
 const shadeMapping = {
   "50": "900",
   "100": "800",
@@ -26,13 +27,14 @@ const shadeMapping = {
   "900": "50",
 };
 
+// Safe function (prevents undefined Amplify build errors)
 const generateThemeObject = (colors: any, mapping: any, invert = false) => {
   const theme: any = {};
   baseColors.forEach((color) => {
     theme[color] = {};
     Object.entries(mapping).forEach(([key, value]: any) => {
       const shadeKey = invert ? value : key;
-      theme[color][key] = colors[color][shadeKey];
+      theme[color][key] = colors[color]?.[shadeKey] ?? "#000000"; // Safe fallback
     });
   });
   return theme;
@@ -69,7 +71,11 @@ const config: Config = {
       },
     },
   },
-  plugins: [createThemes(themes)],
+  plugins: [
+    createThemes({
+      ...themes,
+    }),
+  ],
 };
 
 export default config;
